@@ -14,6 +14,8 @@ public class MUSEScript : MonoBehaviour
     public TextMeshProUGUI timeText;
     public TextMeshProUGUI speedText;
 
+    public TextMeshProUGUI relaxText;
+
     public float count = 0f;
     public bool end = false;
     // Start is called before the first frame update
@@ -35,8 +37,9 @@ public class MUSEScript : MonoBehaviour
             // if (value is float) msg += (float)value;
 
             float v = (value is float) ? (float)value : 0f;
-            v = (float) (Math.Exp((double)v));
+            this.UpdateRelaxText(v);
             v = Math.Max(v, 0f);
+            v = (float) (Math.Exp((double)v));
             Debug.Log(v);
             character.m_MoveSpeedMultiplier = v;
             this.speedText.text = "Speed: " + v.ToString("f2");
@@ -55,5 +58,22 @@ public class MUSEScript : MonoBehaviour
     {
         Scene loadScene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(loadScene.name);
+    }
+
+    public void UpdateRelaxText(float v) 
+    {
+        if(v < 0f) {
+            this.relaxText.color = Color.red;
+            this.relaxText.text = string.Format("Relax: {0} (Concentrating!)", v.ToString("f2"));
+        } 
+        else if (1f < v)
+        {
+            this.relaxText.color = Color.green;
+            this.relaxText.text = string.Format("Relax: {0} (Relaxing!)", v.ToString("f2"));
+        }
+        else {
+            this.relaxText.color = Color.white;
+            this.relaxText.text = string.Format("Relax: {0}", v.ToString("f2"));
+        }
     }
 }
